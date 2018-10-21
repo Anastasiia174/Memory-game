@@ -35,6 +35,8 @@ h1 {
 
     transition-property: transform;
     transition-duration: 0.5s;
+
+    cursor: pointer;
 }
 .game-card:nth-of-type(4n) {
     margin-right: 0;
@@ -77,4 +79,7 @@ h1 {
 }
 .not-match {
     background-color: #f44336;
+}
+.opened {
+    
 }

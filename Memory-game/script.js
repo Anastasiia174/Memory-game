@@ -50,30 +50,40 @@ cards.forEach(function(card, index) {
 
 var game = document.getElementById('game');
 var clickedCards = [];
-game.addEventListener('click', function(event) {    
-    if (clickedCards.length === 2) {
+
+game.addEventListener('click', function(event) {
+    var element = event.target;
+
+    if (clickedCards.length === 2 && element.nodeName === 'DIV' && !element.parentElement.classList.contains('rotated')) {
         clickedCards.forEach(function(card) {
             if (card.lastElementChild.classList.contains('not-match')) {
                 card.lastElementChild.classList.remove('not-match');
                 card.classList.toggle('rotated');
-            }            
+            }
         });
         clickedCards.splice(0, clickedCards.length);
     }
-    var element = event.target;
-    if (element.nodeName == 'DIV' && element.parentElement.nodeName == 'LI' && !element.parentElement.lastElementChild.classList.contains('match')) {
+    
+    if (element.nodeName == 'DIV' 
+        && element.parentElement.nodeName == 'LI' 
+        && !element.parentElement.lastElementChild.classList.contains('match')
+        && !element.parentElement.classList.contains('rotated')
+        ) {
         element.parentElement.classList.toggle('rotated');
         clickedCards.push(element.parentElement);
         
         if (clickedCards.length === 2) {
             var cardToCompare = clickedCards[clickedCards.length - 2];
-
-            if (cardToCompare.className === element.parentElement.className) {
-                element.parentElement.lastElementChild.classList.add('match');
-                cardToCompare.lastElementChild.classList.add('match');
-            } else {
-                cardToCompare.lastElementChild.classList.add('not-match');
-                element.parentElement.lastElementChild.classList.add('not-match');
+            var notTheSame = element.parentElement.compareDocumentPosition(cardToCompare);
+            if (notTheSame) {
+                if (cardToCompare.className === element.parentElement.className) {
+                    element.parentElement.lastElementChild.classList.add('match');
+                    cardToCompare.lastElementChild.classList.add('match');
+                    clickedCards.splice(0, clickedCards.length);
+                } else {
+                    cardToCompare.lastElementChild.classList.add('not-match');
+                    element.parentElement.lastElementChild.classList.add('not-match');
+                }
             }
         }
     }
