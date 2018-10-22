@@ -10,6 +10,7 @@
     <div class="container">
         <header class="text-center">
             <h1>Memoji</h1>
+            <p class="inner"></p>
         </header>
         <ul id="game" class="game-field">
             <li class="game-card">
@@ -61,6 +62,14 @@
                 <div class="back">🐯</div>
             </li>
         </ul>
+        <div class="timer text-center">
+        </div>
+    </div>
+    <div class="popup display-none">
+        <div class="popup-window text-center" data-win="Win" data-lose="Lose">
+            <p class="popup-message"></p>
+            <button class="popup-button" type="button" data-win="Play again" data-lose="Try Again"></button>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
