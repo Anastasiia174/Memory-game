@@ -21,12 +21,19 @@ var uniqueEmoji = [
 var emoji = uniqueEmoji.concat(uniqueEmoji);
 
 var cards = Array.from(document.querySelectorAll('.game-card'));
-shuffleCards(cards, emoji);
-
+var start_btn = document.querySelector('.btn-start');
 var game = document.getElementById('game');
 var popup = document.querySelector('.popup');
 var popup_msg = document.querySelector('.popup-message');
 var popup_btn = document.querySelector('.popup-button');
+
+start_btn.addEventListener('click', function(event) {
+    document.querySelector('h1').classList.remove('title_big-size', 'title_padding-top_150');
+    document.querySelector('.game-desc').classList.add('display-none');
+    start_btn.classList.add('display-none');
+    game.classList.remove('display-none');
+    shuffleCards(cards, emoji);
+});
 
 var clickedCards = [];
 var matchedCards = 0;
@@ -64,7 +71,7 @@ game.addEventListener('click', function(event) {
         if (timerID === 0) {
             startTimer(timerSettings.minutes, timerSettings.seconds);
         }
-        //если кликнуты две карты, проверяем, что это не одна и та же карта и сравниваем 
+        //если кликнуты две карты, проверяем, что это не одна и та же карта и сравниваем
         if (clickedCards.length === 2) {
             var cardToCompare = clickedCards[clickedCards.length - 2];
             var notTheSame = element.parentElement.compareDocumentPosition(cardToCompare);

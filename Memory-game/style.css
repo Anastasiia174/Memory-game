@@ -2,14 +2,25 @@ html {
     position: relative;
 }
 body {
-    background-color: #cfd0cf;
+    background-color: #DCE2EE;
 }
 h1 {
     margin: 40px 0;
     padding: 0;
-    font: 42px/47px Arial, sans-serif;
+    font-family: Arial, sans-serif;
     font-weight: bold;
     color: #434344;    
+}
+.title_big-size {
+    font-size: 55px;
+    line-height: 60px;
+}
+.title_padding-top_150 {
+    padding-top: 150px;
+}
+.game-desc {
+    font: 25px/30px Arial, sans-serif;
+    color: #434344;
 }
 .text-center {
     text-align: center;
@@ -17,6 +28,21 @@ h1 {
 .container {
     width: 700px;
     margin: 0 auto;
+}
+.btn-start {
+    padding: 10px 20px;
+
+    font: 25px/30px Arial, sans-serif;
+    color: #FFF;
+    text-transform: uppercase;
+
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 50%);
+    border-style: none;
+    border-radius: 10px;
+    background-image: linear-gradient(to right, #52D3C8, #3174E4);
+}
+.btn-start:active {
+    box-shadow: inset 2px 1px 8px rgba(0, 0, 0, 50%);
 }
 .game-field {
     list-style: none;
