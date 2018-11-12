@@ -23,10 +23,9 @@ var emoji = uniqueEmoji.concat(uniqueEmoji);
 var cards = Array.from(document.querySelectorAll('.game-card'));
 shuffleCards(cards, emoji);
 
-/*listening clicking*/
-
 var game = document.getElementById('game');
 var popup = document.querySelector('.popup');
+var popup_msg = document.querySelector('.popup-message');
 var popup_btn = document.querySelector('.popup-button');
 
 var clickedCards = [];
@@ -37,19 +36,23 @@ var timerSettings = {
     seconds: 0
 };
 var timerID = 0;
+
+var winMessage = animateText(popup_msg.dataset.win);
+var loseMessage = animateText(popup_msg.dataset.lose);
+/*listening clicking*/
 game.addEventListener('click', function(event) {
     var element = event.target;
-
+    //если открыты две карты и они не совпали, то закрываем
     if (clickedCards.length === 2 && element.nodeName === 'DIV' && !element.parentElement.classList.contains('rotated')) {
         clickedCards.forEach(function(card) {
             if (card.lastElementChild.classList.contains('not-match')) {
-                card.lastElementChild.classList.remove('not-match');
                 card.classList.toggle('rotated');
+                card.lastElementChild.classList.remove('not-match');
             }
         });
         clickedCards.splice(0, clickedCards.length);
     }
-
+    //проверяем, что кликнутая карточка не совпала ранее и не является уже открытой
     if (element.nodeName == 'DIV'
         && element.parentElement.nodeName == 'LI'
         && !element.parentElement.lastElementChild.classList.contains('match')
@@ -57,11 +60,11 @@ game.addEventListener('click', function(event) {
         ) {
         element.parentElement.classList.toggle('rotated');
         clickedCards.push(element.parentElement);
-
+        //устанавливаем таймер
         if (timerID === 0) {
             startTimer(timerSettings.minutes, timerSettings.seconds);
         }
-
+        //если кликнуты две карты, проверяем, что это не одна и та же карта и сравниваем 
         if (clickedCards.length === 2) {
             var cardToCompare = clickedCards[clickedCards.length - 2];
             var notTheSame = element.parentElement.compareDocumentPosition(cardToCompare);
@@ -70,7 +73,7 @@ game.addEventListener('click', function(event) {
                     element.parentElement.lastElementChild.classList.add('match');
                     cardToCompare.lastElementChild.classList.add('match');
                     clickedCards.splice(0, clickedCards.length);
-                    matchedCards+=2;
+                    matchedCards += 2;
 
                 } else {
                     cardToCompare.lastElementChild.classList.add('not-match');
@@ -79,12 +82,11 @@ game.addEventListener('click', function(event) {
             }
         }
     }
+    //выигрыш
     if (matchedCards == cards.length) {
         clearTimeout(timerID);
         popup_btn.innerText = popup_btn.dataset.win;
-        var winText = popup.firstElementChild.dataset.win;
-        var popup_msg = document.querySelector('.popup-message');
-        popup_msg.innerHTML = animateTitle(winText);
+        popup_msg.innerHTML = winMessage;
         popup.classList.remove('display-none');
     }
 });
@@ -101,17 +103,35 @@ popup_btn.addEventListener('click', function(event) {
     }, 200);
 });
 
+function shuffle(arr) {
+    var j, temp;
+    for(var i = arr.length - 1; i > 0; i--){
+        j = Math.floor(Math.random()*(i + 1));
+        temp = arr[j];
+        arr[j] = arr[i];
+        arr[i] = temp;
+    }
+    return arr;
+}
+
+function shuffleCards(cards, pictures) {
+    pictures = shuffle(pictures);
+    cards.forEach(function(card, index) {
+        if (card.classList.item(1)) {
+            card.classList.remove(card.classList.item(1));
+        }
+        card.lastElementChild.innerText = pictures[index].content;
+        card.classList.add(pictures[index].class);
+});
+}
+
 function startTimer(minutes, seconds) {
     var m = minutes;
     var s = seconds;
     if (s == 0) {
       if (m == 0) {
         clearTimeout(timerID);
-        
-        var loseText = popup.firstElementChild.dataset.lose;
-        var popup_msg = document.querySelector('.popup-message');
-        popup_msg.innerHTML = animateTitle(loseText);
-        
+        popup_msg.innerHTML = loseMessage;
         popup_btn.innerText = popup_btn.dataset.lose;
         popup.classList.remove('display-none');
         return;
@@ -127,6 +147,7 @@ function startTimer(minutes, seconds) {
         startTimer(m, s);
     }, 1000);
 }
+
 function closeCards() {
     var openedCards = Array.from(document.querySelectorAll('.rotated'));
     openedCards.forEach(function(card) {
@@ -140,7 +161,7 @@ function closeCards() {
     });
 }
 
-function animateTitle(text) {
+function animateText(text) {
     var arrLetters = text.split('');
     var animatedText = arrLetters.map(function(letter, index) {
         var currentLetter = document.createElement('div');
@@ -151,26 +172,4 @@ function animateTitle(text) {
         return currentLetter.outerHTML;
     });
     return animatedText.join('');
-}
-
-function shuffle(arr) {
-    var j, temp;
-    for(var i = arr.length - 1; i > 0; i--){
-        j = Math.floor(Math.random()*(i + 1));
-        temp = arr[j];
-        arr[j] = arr[i];
-        arr[i] = temp;
-    }
-    return arr;
-}
-
-function shuffleCards(cards, emoji) {
-    emoji = shuffle(emoji);
-    cards.forEach(function(card, index) {
-        if (card.classList.item(1)) {
-            card.classList.remove(card.classList.item(1));
-        }
-        card.lastElementChild.innerText = emoji[index].content;
-        card.classList.add(emoji[index].class);
-});
 }
